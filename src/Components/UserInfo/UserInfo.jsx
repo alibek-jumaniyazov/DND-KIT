@@ -8,7 +8,7 @@ export default function UserInfo({ state }) {
             <SortableContext items={state} strategy={verticalListSortingStrategy}>
             {
                 state.map((item) => (
-                   <User id={item.id} title={item.title} key={item.id}/>
+                   <User id={item.id} title={item.title} state={state} key={item.id} />
                 ))
             }
             </SortableContext>

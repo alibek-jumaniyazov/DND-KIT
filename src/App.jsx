@@ -28,7 +28,7 @@ export default function App() {
 
   const titleRef = useRef(null)
 
-  const getUserPos = id => state.findIndex(user => user.id === id)
+  const getUserPos = id => state.findIndex(user => id === user.id)
 
   const handleDragEnd = event => {
     const { active, over } = event
@@ -57,14 +57,20 @@ export default function App() {
 
   console.log(state);
 
+  const handleButtonClick = () => {
+    // state ni tartiblash
+    setState([...state.sort((a, b) => a.id - b.id)]);
+  };
+
   return (
     <div className='App'>
       <h1>Drag and Drop = DND </h1>
-      <AddUser addUser={addUser} titleRef={titleRef}/>
+      <AddUser addUser={addUser} titleRef={titleRef} handleButtonClick={handleButtonClick} />
       <DndContext sensors={sensor} onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
         <UserInfo state={state} />
 
       </DndContext>
+
     </div>
   )
 }
