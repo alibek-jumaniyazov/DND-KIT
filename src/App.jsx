@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { DndContext, closestCorners } from '@dnd-kit/core'
+import React, { useRef, useState } from 'react'
+import { DndContext, KeyboardSensor, PointerSensor, TouchSensor, closestCorners, useSensor, useSensors } from '@dnd-kit/core'
 import UserInfo from './Components/UserInfo/UserInfo'
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
+
 
 export default function App() {
 
@@ -23,12 +25,45 @@ export default function App() {
     },
   ])
 
-  return (
-    <div className='App'>
-      <h1>Drag and Drop = DND </h1>
-      <DndContext collisionDetection={closestCorners}>
-          <UserInfo state={state}/>
-      </DndContext>
-    </div>
-  )
+  const getUserPos = id => state.findIndex(user => user.id === id)
+
+  const handleDragEnd = event => {
+    const { active, over } = event
+
+    if (active.id === over.id) return;
+
+    setState(state => {
+      const originalPos = getUserPos(active.id)
+      const newPos = getUserPos(over.id)
+
+      return arrayMove(state, originalPos, newPos)
+    })
+  };
+
+  const sensor = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const titleRef = useRef(null)
+  function addUser() {
+    setState(user => [...user, { id:state.length + 1, title: titleRef.current.value}])
+}
+
+console.log(state);
+
+return (
+  <div className='App'>
+    <h1>Drag and Drop = DND </h1>
+    <input type="text" ref={titleRef} />
+    <button onClick={() => addUser()}>add user</button>
+    <DndContext sensors={sensor} onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+      <UserInfo state={state} />
+
+    </DndContext>
+  </div>
+)
 }

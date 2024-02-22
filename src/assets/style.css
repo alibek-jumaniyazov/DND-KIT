@@ -33,4 +33,5 @@ h1{
     padding: 20px;
     cursor: pointer;
     box-shadow: 4px 5px 8px 0px rgba(34, 60, 80, 0.2);
+    touch-action: none;
 }
