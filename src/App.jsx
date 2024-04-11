@@ -33,8 +33,6 @@ export default function App() {
   const handleDragEnd = event => {
     const { active, over } = event
 
-    if (active.id === over.id) return;
-
     setState(state => {
       const originalPos = getUserPos(active.id)
       const newPos = getUserPos(over.id)
@@ -68,7 +66,6 @@ export default function App() {
       <AddUser addUser={addUser} titleRef={titleRef} handleButtonClick={handleButtonClick} />
       <DndContext sensors={sensor} onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
         <UserInfo state={state} />
-
       </DndContext>
 
     </div>
